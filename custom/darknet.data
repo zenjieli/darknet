@@ -1,0 +1,6 @@
+classes = 1
+train  = /home/zli/workspace/github/darknet/custom/python/train_images.txt
+valid  = /home/zli/workspace/github/darknet/custom/python/test_images.txt
+names = /home/zli/workspace/github/darknet/custom/python/classes.names
+backup = /home/zli/data/yolov3/results
+
