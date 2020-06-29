@@ -1,7 +1,7 @@
 import os
 
 # Path for the directory containing both images and labels
-image_label_path = '/home/zli/data/yolov3/security_images/knife_images'
+image_label_path = '/home/zli/data/yolov3/weapons/knife_test'
 
 for root, dirs, filenames in os.walk(image_label_path):
     for f in filenames:    
