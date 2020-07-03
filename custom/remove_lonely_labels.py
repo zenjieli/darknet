@@ -1,7 +1,7 @@
 import os
 
 # Path for the directory containing both images and labels
-image_label_path = '/home/zli/data/yolov3/weapons/knife_test'
+image_label_path = '/home/zli/data/weapons/knife_images'
 
 for root, dirs, filenames in os.walk(image_label_path):
     for f in filenames:    
@@ -10,4 +10,3 @@ for root, dirs, filenames in os.walk(image_label_path):
             os.remove(os.path.join(root, f))
     
     break
-
