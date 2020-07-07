@@ -3,20 +3,17 @@ import subprocess
 import os
 
 runMode = "test"
-classes = ['Knife']
-image_dir_name = 'knife_images/'
+classes = ['Shotgun', 'Handgun']
+class_numbers = ['1', '1']
+image_dir_name = 'gun_train_images/'
 
 # Create a dictionary for class_name -> class_id
-data_dir = os.path.join(os.path.expanduser('~'), 'workspace/github/security_images/')
+
+data_dir = os.path.join(os.path.expanduser('~'), 'data/weapons/archive/')
 with open(os.path.join(data_dir, data_dir + 'class-descriptions-boxable.csv'), mode='r') as infile:
     reader = csv.reader(infile)
     dict_list = {rows[1]: rows[0] for rows in reader}
 
-# Clean up the labels dir
-labels_dir = data_dir + 'labels'
-
-added_image_ids = set()
-image_list_file = open('train_images.txt', 'w')
 for class_idx in range(0, len(classes)):
 
     # Get the class name
@@ -34,25 +31,20 @@ for class_idx in range(0, len(classes)):
     for line in class_annotations[0:totalNumOfAnnotations]:  # For each annotation
         count = count + 1
 
-        if count % 100 == 0:
+        if count % 10 == 0:
             print("annotation count : " + str(count))
 
         lineParts = line.split(',')
 
         image_id = lineParts[0]
         if os.path.exists(data_dir + image_dir_name + image_id + ".jpg"):
-            if not (image_id in added_image_ids):
-                added_image_ids.add(image_id)
-                image_list_file.write(image_dir_name + image_id + '.jpg\n')
-
-
             # Create or append this annotation
             xmin = lineParts[4]
             xmax = lineParts[5]
             ymin = lineParts[6]
             ymax = lineParts[7]
-            with open(labels_dir + '/%s.txt' % (lineParts[0]), 'a') as f:
-                f.write(' '.join([str(class_idx), str((float(xmax) + float(xmin))/2),
+            with open(data_dir + image_dir_name + '/%s.txt' % (lineParts[0]), 'a') as f:
+                f.write(' '.join([class_numbers[class_idx], str((float(xmax) + float(xmin))/2),
                                     str((float(ymax) + float(ymin))/2),
                                     str(float(xmax)-float(xmin)),
                                     str(float(ymax)-float(ymin))])+'\n')
