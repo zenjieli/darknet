@@ -27,17 +27,16 @@ git clone https://github.com/pjreddie/darknet
 cd darknet
 make
 ```
-6. Get the pretrained model
+6.Get the pretrained model
 
 `wget https://pjreddie.com/media/files/darknet53.conv.74 -O ~/darknet/darknet53.conv.74`
 
-7. Fill in correct paths in the darknet.data file
+7.Fill in correct paths in the darknet.data file
 
-8. Start the training as below, by giving the correct paths to all the files being used as arguments
+8.Start the training as below, by giving the correct paths to all the files being used as arguments
 
 ```shell
-cd /home/zli/data/yolov3/weapons/knife_images
-
+cd /home/zli/data/weapons
 ~/workspace/github/darknetv4/darknet detector train knife_train.data knife-yolov3.cfg ../results/knife-yolov3_best.weights -map
 ```
 
@@ -47,14 +46,21 @@ cd /home/zli/data/yolov3/weapons/knife_images
 
 ```shell
 cd /home/zli/data/weapons
-/home/zli/workspace/github/darknetv4/darknet detector test knife_train.data knife_yolov3_test.cfg ../results/knife-yolov3_best.weights < knife_test.txt
+/home/zli/workspace/github/darknetv4/darknet detector test cfg/knife_train.data cfg/knife_yolov3_test.cfg results/knife-yolov3_best.weights < knife_test_images.txt
 ```
 
 Demo with a webcam:
 
 ```shell
 cd /home/zli/data/weapons
-/home/zli/workspace/github/darknetv4/darknet detector demo knife_train.data knife_yolov3_test.cfg ../results/knife-yolov3_best.weights -c 0
+/home/zli/workspace/github/darknetv4/darknet detector demo cfg/knife_train.data cfg/knife_yolov3_test.cfg results/knife-yolov3_best.weights -c 0
+```
+
+Calculate mAP
+
+```shell
+cd /home/zli/data/weapons
+/home/zli/workspace/github/darknetv4/darknet detector map cfg/knife_train.data cfg/knife_yolov3_test.cfg results/knife-yolov3_best.weights
 ```
 
 ## Extra information
@@ -79,9 +85,8 @@ Get image URLs at <http://www.image-net.org/api/text/imagenet.synset.geturls.get
 ```shell
 cd ~/data/weapons
 
-/home/zli/workspace/github/Yolo_mark/yolo_mark knife_images knife_train.txt obj.names
+/home/zli/workspace/github/Yolo_mark/yolo_mark knife_images knife_train.txt cfg/obj.names
 ```
-
 
 <http://www.robots.ox.ac.uk/~vgg/software/via/via_demo.html>
 <https://www.programmersought.com/article/1815101352/>

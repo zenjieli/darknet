@@ -2,11 +2,12 @@ import csv
 import subprocess
 import os
 
-bb_file = 'train-annotations-bbox.csv'
-classes = ['Helmet']
+mode = 'test'
+bb_file = mode + '-annotations-bbox.csv'
+classes = ['Shotgun', 'Handgun']
 
 # Create a dictionary for class_name -> class_id
-data_dir = os.path.join(os.path.expanduser('~'), 'data/yolov3/openimages/')
+data_dir = os.path.join(os.path.expanduser('~'), 'data/openimages/')
 with open(os.path.join(data_dir, data_dir + 'class-descriptions-boxable.csv'), mode='r') as infile:
     reader = csv.reader(infile)
     dict_list = {rows[1]: rows[0] for rows in reader}
@@ -38,5 +39,5 @@ for class_idx in range(0, len(classes)):
 
             subprocess.run(['aws', 's3', '--no-sign-request', '--only-show-errors', 'cp',
                             's3://open-images-dataset/' +
-                            'train/' + image_id + ".jpg",
+                            mode + '/' + image_id + ".jpg",
                             data_dir + 'images1/' + image_id + ".jpg"])
