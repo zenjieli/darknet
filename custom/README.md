@@ -37,10 +37,10 @@ make
 
 ```shell
 cd /home/zli/data/weapons
-~/workspace/github/darknetv4/darknet detector train knife_train.data knife-yolov3.cfg ../results/knife-yolov3_best.weights -map
+~/workspace/github/darknetv4/darknet detector train cfg/weapon_train.data cfg/weapon_yolov3.cfg results/weapon_yolov3_best.weights -map -gpus 0,1
 ```
 
-```-show_imgs``` is optional
+```-gpus``` is optional
 
 9.Test with an image
 
@@ -60,7 +60,7 @@ Calculate mAP
 
 ```shell
 cd /home/zli/data/weapons
-/home/zli/workspace/github/darknetv4/darknet detector map cfg/knife_train.data cfg/knife_yolov3_test.cfg results/knife-yolov3_best.weights
+/home/zli/workspace/github/darknetv4/darknet detector map cfg/weapon_train.data cfg/weapon_yolov3_test.cfg results/weapon_yolov3_best.weights
 ```
 
 ## Extra information
@@ -85,7 +85,7 @@ Get image URLs at <http://www.image-net.org/api/text/imagenet.synset.geturls.get
 ```shell
 cd ~/data/weapons
 
-/home/zli/workspace/github/Yolo_mark/yolo_mark knife_images knife_train.txt cfg/obj.names
+/home/zli/workspace/github/Yolo_mark/yolo_mark weapon_train_images weapon_train_images.txt cfg/obj.names
 ```
 
 <http://www.robots.ox.ac.uk/~vgg/software/via/via_demo.html>
