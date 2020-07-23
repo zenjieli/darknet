@@ -42,21 +42,29 @@ cd /home/zli/data/weapons
 
 ```-gpus``` is optional
 
-9.Test with an image
+9.Test and demo
 
+**Test a list of files**
 ```shell
 cd /home/zli/data/weapons
 /home/zli/workspace/github/darknetv4/darknet detector test cfg/knife_train.data cfg/knife_yolov3_test.cfg results/knife-yolov3_best.weights < knife_test_images.txt
 ```
 
-Demo with a webcam:
+**Test a video and save results**
+
+```
+cd /home/zli/data/weapons
+/home/zli/workspace/github/darknetv4/darknet detector demo cfg/weapon_train.data cfg/weapon_yolov3.cfg results/weapon_yolov3_best.weights test.mp4 -out_filename result.mp4
+```
+
+**Demo with a webcam**
 
 ```shell
 cd /home/zli/data/weapons
 /home/zli/workspace/github/darknetv4/darknet detector demo cfg/knife_train.data cfg/knife_yolov3_test.cfg results/knife-yolov3_best.weights -c 0
 ```
 
-Calculate mAP
+**Calculate mAP**
 
 ```shell
 cd /home/zli/data/weapons
