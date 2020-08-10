@@ -57,3 +57,4 @@ uselib_track
 darknet
 bad.list
 predictions.jpg
+**/__pycache__/**
