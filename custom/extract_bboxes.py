@@ -13,7 +13,7 @@ def try_add_patch(lines, img_patches):
             raise Exception(f'Expected: {image_path_token}; Actual: {line}')
 
         token_len = len(image_path_token)
-        img_path = line[token_len: line.find(':', token_len)]
+        img_path = line[token_len: line.find(':', token_len)].strip()
 
         for i in range(1, len(lines)):
             bb = try_parse_bb(lines[i], 50)
@@ -47,11 +47,13 @@ def extract_bboxes(results, object_name='person', threshold_percent='50'):
         elif line.startswith(person_token):
             batch_lines.append(line)
 
-    print(img_patches)
-    print('done')
+    return img_patches    
 
 
 if __name__ == '__main__':
     result_file = open(
         '/home/zli/data/hospital/ChieriCorridor/1/result.txt', 'r')
-    extract_bboxes(result_file.readlines())
+    img_patches = extract_bboxes(result_file.readlines())
+    
+    from image_cropping import crop_and_save_images
+    crop_and_save_images(img_patches)
