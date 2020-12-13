@@ -1,20 +1,13 @@
 import os
 import os.path as osp
 
-
-def get_file_list(full_path):
-    files = []
-    for root, _, filenames in os.walk(full_path):
-        for filename in filenames:
-            files.append(osp.join(root, filename))
-
-        break
-
-    return files
+import coco_fileutils
+from coco_fileutils import get_file_list
+from coco_fileutils import user_path
 
 
-def keep_only_labels(label_path, label):
-    files = get_file_list(label_path)
+def keep_only_labels(label_dir, label):
+    files = get_file_list(label_dir, True)
 
     for filepath in files:
         lines = []
@@ -31,6 +24,19 @@ def keep_only_labels(label_path, label):
             with open(filepath, 'w') as f:
                 f.writelines(newlines)
 
-if __name__ == '__main__':
-    keep_only_labels(osp.join(osp.expanduser(
-        '~'), 'Data/Coco/labels/train2017'), '0')
+
+def write_labelled_images_filenames(image_dir, out_filename):
+    files = get_file_list(image_dir, False)
+    with open(out_filename, 'w') as f:
+        for filename in files:
+            if filename.endswith('.jpg') and osp.isfile(osp.join(image_dir, coco_fileutils.filename_change_ext(filename, '.txt'))):
+                f.write(osp.join(image_dir, filename) + '\n')
+
+
+if __name__ == "__main__":
+    write_labelled_images_filenames(
+        user_path('Data/Coco/images/train2017'), user_path('/home/zli/Data/Coco/images/train_images.txt'))
+
+# keep_only_labels(osp.join(osp.expanduser('~'), 'Data/Coco/labels/train2017'), '0')
+# coco_fileutils.copy_files(user_path(
+#     'Data/Coco/labels/val2017'), user_path('Data/Coco/images/val2017'))
