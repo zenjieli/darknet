@@ -33,6 +33,19 @@ def write_labelled_images_filenames(image_dir, out_filename):
                 f.write(osp.join(image_dir, filename) + '\n')
 
 
+def files_with_large_enough_boxes(image_dir):
+    good_files = []
+    files = get_file_list(image_dir, True, '.jpg')
+
+    for filename in files:
+        label_filename = coco_fileutils.filename_change_ext(filename, '.txt')
+
+        if coco_fileutils.are_boxes_large_enough(coco_fileutils.read_bounding_boxes(label_filename)):
+            good_files.append(filename)
+
+    return good_files
+
+
 if __name__ == "__main__":
     write_labelled_images_filenames(
         user_path('Data/Coco/images/train2017'), user_path('/home/zli/Data/Coco/images/train_images.txt'))
