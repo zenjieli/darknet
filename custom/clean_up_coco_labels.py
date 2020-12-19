@@ -33,23 +33,36 @@ def write_labelled_images_filenames(image_dir, out_filename):
                 f.write(osp.join(image_dir, filename) + '\n')
 
 
-def files_with_large_enough_boxes(image_dir):
+def files_with_large_enough_boxes(image_dir, count_to_extract):
     good_files = []
     files = get_file_list(image_dir, True, '.jpg')
 
     for filename in files:
         label_filename = coco_fileutils.filename_change_ext(filename, '.txt')
 
-        if coco_fileutils.are_boxes_large_enough(coco_fileutils.read_bounding_boxes(label_filename)):
-            good_files.append(filename)
+        if osp.isfile(label_filename):
+            area = coco_fileutils.min_box_area(
+                coco_fileutils.read_bounding_boxes(label_filename))
+            if area > 0:
+                good_files.append({'filepath': filename, 'area': area})
 
-    return good_files
+    good_files.sort(key=lambda f: f['area'])
+    good_files = good_files[len(good_files) -
+                            count_to_extract: len(good_files)]
+    return list(map(lambda f: f['filepath'], good_files))
+
+
+def copy_files_with_with_large_enough_boxes(src_image_dir, dest_image_dir):
+    filenames = files_with_large_enough_boxes(src_image_dir, 30000)
+    coco_fileutils.copy_files(filenames, dest_image_dir)
 
 
 if __name__ == "__main__":
-    write_labelled_images_filenames(
-        user_path('Data/Coco/images/train2017'), user_path('/home/zli/Data/Coco/images/train_images.txt'))
+    copy_files_with_with_large_enough_boxes(user_path('Data/Coco/images/train2017'),
+                                            user_path('Data/Coco/images/train'))
+    # write_labelled_images_filenames(
+    #     user_path('Data/Coco/images/train2017'), user_path('/home/zli/Data/Coco/images/train_images.txt'))
 
 # keep_only_labels(osp.join(osp.expanduser('~'), 'Data/Coco/labels/train2017'), '0')
-# coco_fileutils.copy_files(user_path(
+# coco_fileutils.copy_files_dir(user_path(
 #     'Data/Coco/labels/val2017'), user_path('Data/Coco/images/val2017'))

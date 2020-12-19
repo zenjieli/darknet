@@ -7,7 +7,7 @@ def user_path(path1):
     return osp.join(osp.expanduser('~'), path1)
 
 
-def get_file_list(root_dir, need_fullpath, ext = ''):
+def get_file_list(root_dir, need_fullpath, ext=''):
     files = []
     ext = ext.lower()
     for root, _, filenames in os.walk(root_dir):
@@ -46,32 +46,37 @@ def filename_change_ext(filename, new_ext):
     return pre + new_ext
 
 
-def copy_files(src, dest):
-    files = get_file_list(src, False)
+def copy_files_dir(src_dir, dest_dir):
+    files = get_file_list(src_dir, False)
 
     for filename in files:
-        copyfile(osp.join(src, filename), osp.join(dest, filename))
+        copyfile(osp.join(src_dir, filename), osp.join(dest_dir, filename))
+
+
+def copy_files(src_files, dest_dir):
+    for filename in src_files:
+        copyfile(filename, osp.join(dest_dir, osp.basename(filename)))
+
 
 def read_bounding_boxes(label_path):
     boxes = []
     lines = []
     with open(label_path, 'r') as f:
-        lines = f.readline()
-    
+        lines = f.readlines()
+
     for line in lines:
         words = line.split()
 
         if len(words) != 0 and len(words) != 5:
-            raise Exception(f"Wrong label " + line)                
+            raise Exception(f"Wrong label " + line)
 
-        boxes.append({'left': words[1], 'top', words[2], 'w', words[3], 'h', words[4]})
-    
+        boxes.append({'x_center': float(words[1]), 'y_center': float(words[2]),
+                      'width': float(words[3]), 'height': float(words[4])})
+
     return boxes
 
-def are_boxes_large_enough(boxes, min_w, min_h):
-    for box in boxes:
-        if box['w'] < min_w and box['w'] < min_h:
-            return False
-    
-    # Boxes are large enough unless the list is emptry
-    return len(boxes) > 0
+
+def min_box_area(boxes):
+    areas = list(map(lambda box: box['width'] * box['height'], boxes))
+
+    return min(areas) if len(areas) > 0 else 0
