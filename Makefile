@@ -1,10 +1,10 @@
-GPU=1
-CUDNN=1
-CUDNN_HALF=1
+GPU=0
+CUDNN=0
+CUDNN_HALF=0
 OPENCV=1
 AVX=1
 OPENMP=1
-LIBSO=0
+LIBSO=1
 ZED_CAMERA=0
 ZED_CAMERA_v2_8=0
 
@@ -100,8 +100,8 @@ endif
 ifeq ($(OPENCV), 1)
 COMMON+= -DOPENCV
 CFLAGS+= -DOPENCV
-LDFLAGS+= `pkg-config --libs opencv4 2> /dev/null || pkg-config --libs opencv`
-COMMON+= `pkg-config --cflags opencv4 2> /dev/null || pkg-config --cflags opencv`
+LDFLAGS+= `PKG_CONFIG_PATH=/home/zli/workspace/src/voyager/thirdparty/opencv/lib/pkgconfig pkg-config --libs opencv4`
+COMMON+= `PKG_CONFIG_PATH=/home/zli/workspace/src/voyager/thirdparty/opencv/lib/pkgconfig pkg-config --cflags-only-I opencv4`
 endif
 
 ifeq ($(OPENMP), 1)
