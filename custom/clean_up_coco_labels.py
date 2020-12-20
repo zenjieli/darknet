@@ -1,6 +1,7 @@
 import os
 import os.path as osp
 from random import randrange
+from shutil import copyfile
 
 import coco_fileutils
 from coco_fileutils import get_file_list
@@ -70,20 +71,61 @@ def copy_files_with_with_large_enough_boxes(src_image_dir, dest_image_dir, count
     coco_fileutils.copy_files(filenames, dest_image_dir)
 
 
+def randomly_select_images(src_image_dir, select_count):
+    filenames = get_file_list(src_image_dir, True, '.jpg')
+    file_count = len(filenames)
+    indices = set()
+
+    if select_count >= file_count:
+        return filenames
+    else:
+        selected_filenames = []
+        for i in range(select_count):
+            idx = randrange(file_count)
+            while idx in indices:
+                idx = randrange(file_count)
+
+            indices.add(idx)
+            selected_filenames.append(filenames[idx])
+
+        return selected_filenames
+
+
 def randomly_select_labelless_images(src_image_dir, select_count):
     filenames = files_without_labels(src_image_dir)
     file_count = len(filenames)
 
     selected_filenames = []
+    indices = set()
     for i in range(select_count):
-        selected_filenames.append(filenames[randrange(file_count)])
+        idx = randrange(file_count)
+        while idx in indices:
+            idx = randrange(file_count)
+
+        indices.add(idx)
+        selected_filenames.append(filenames[idx])
 
     return selected_filenames
 
+# Copy corresponding labels from label_dir to image_dir
+def copy_labels(image_dir, label_dir):
+    filenames =get_file_list(image_dir, True, '.jpg')
+    
+    for filename in filenames:        
+        label_filename = coco_fileutils.get_label_filename(filename, label_dir)
+        if not osp.isfile(label_filename):
+            raise Exception(f'File does not exist: {label_filename}')
+        
+        copyfile(label_filename, osp.join(image_dir, osp.basename(label_filename)))
 
-if __name__ == "__main__":    
-    # filenames = randomly_select_labelless_images(user_path('Data/Coco/images/train2017'), 2500)
-    # coco_fileutils.copy_files(filenames, '/home/zli/Data/Coco/images/train/')
+
+if __name__ == "__main__":
+    copy_labels(user_path('Data/Coco/images/val'), user_path('Data/Coco/images/val2017'))
+    # filenames = randomly_select_images(user_path('Data/Coco/images/train'), 10000)
+    # coco_fileutils.copy_files(filenames, '/home/zli/Data/Coco/images/3/')
+    # filenames = randomly_select_labelless_images(
+    #     user_path('Data/Coco/images/val2017'), 500)
+    # coco_fileutils.copy_files(filenames, '/home/zli/Data/Coco/images/2/')
     # write_labelled_images_filenames(
     #     user_path('Data/Coco/images/train2017'), user_path('/home/zli/Data/Coco/images/train_images.txt'))
 

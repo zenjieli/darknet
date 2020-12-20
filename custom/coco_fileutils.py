@@ -57,6 +57,9 @@ def copy_files(src_files, dest_dir):
     for filename in src_files:
         copyfile(filename, osp.join(dest_dir, osp.basename(filename)))
 
+        if not osp.isfile(osp.join(dest_dir, osp.basename(filename))):
+            print('Error')
+
 
 def read_bounding_boxes(label_path):
     boxes = []
@@ -74,6 +77,12 @@ def read_bounding_boxes(label_path):
                       'width': float(words[3]), 'height': float(words[4])})
 
     return boxes
+
+
+def get_label_filename(image_filename, label_dir):
+    basename = osp.basename(image_filename)
+
+    return osp.join(label_dir, filename_change_ext(basename, '.txt'))
 
 
 def min_box_area(boxes):
