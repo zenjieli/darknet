@@ -4,7 +4,7 @@
 ## Get started
 ```
 cd darknetv4
-make
+PATH=/usr/local/cuda/bin/:$PATH make
 wget https://pjreddie.com/media/files/yolov3.weights
 ./darknet detect cfg/yolov3.cfg yolov3.weights data/dog.jpg
 ```
