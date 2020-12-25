@@ -54,6 +54,22 @@ def files_with_large_enough_boxes(image_dir, count_to_extract):
     return list(map(lambda f: f['filepath'], good_files))
 
 
+# size_low_threshold, size_high_threshold: [0, 1], the range for a bounding box
+def get_files_with_boxes_in_range(image_dir, size_low_threshold, size_high_threshold):
+    good_files = []
+    files = get_file_list(image_dir, True, '.jpg')
+
+    for filename in files:
+        label_filename = coco_fileutils.filename_change_ext(filename, '.txt')
+
+        if osp.isfile(label_filename):
+            area = coco_fileutils.min_box_area(coco_fileutils.read_bounding_boxes(label_filename))
+            if area >= size_low_threshold and area <= size_high_threshold:
+                good_files.append(filename)
+
+    return good_files
+
+
 def files_without_labels(image_dir):
     target_files = []
     filenames = get_file_list(image_dir, True, '.jpg')
@@ -108,19 +124,20 @@ def randomly_select_labelless_images(src_image_dir, select_count):
     return selected_filenames
 
 # Copy corresponding labels from label_dir to image_dir
+
+
 def copy_labels(image_dir, label_dir):
-    filenames =get_file_list(image_dir, True, '.jpg')
-    
-    for filename in filenames:        
+    filenames = get_file_list(image_dir, True, '.jpg')
+
+    for filename in filenames:
         label_filename = coco_fileutils.get_label_filename(filename, label_dir)
         if not osp.isfile(label_filename):
             raise Exception(f'File does not exist: {label_filename}')
-        
+
         copyfile(label_filename, osp.join(image_dir, osp.basename(label_filename)))
 
 
 if __name__ == "__main__":
-    copy_labels(user_path('Data/Coco/images/val'), user_path('Data/Coco/images/val2017'))
     # filenames = randomly_select_images(user_path('Data/Coco/images/train'), 10000)
     # coco_fileutils.copy_files(filenames, '/home/zli/Data/Coco/images/3/')
     # filenames = randomly_select_labelless_images(
