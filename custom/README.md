@@ -3,7 +3,7 @@
 
 ## Get started
 ```
-cd darknetv4
+cd darknet
 PATH=/usr/local/cuda/bin/:$PATH make
 wget https://pjreddie.com/media/files/yolov3.weights
 ./darknet detect cfg/yolov3.cfg yolov3.weights data/dog.jpg
@@ -13,8 +13,10 @@ wget https://pjreddie.com/media/files/yolov3.weights
 
 ```shell
 cd /home/zli/data/weapons
-~/workspace/github/darknetv4/darknet detector train cfg/weapon_train.data cfg/weapon_yolov3.cfg results/weapon_yolov3_best.weights -map -gpus 0,1
+~/workspace/github/darknet/darknet detector train cfg/weapon_train.data cfg/weapon_yolov3.cfg results/weapon_yolov3_best.weights -map -gpus 0,1
 ```
+
+The flag ```-clear``` will reset the iterations saved in the weights.
 
 ```-gpus``` is optional
 
@@ -24,28 +26,34 @@ cd /home/zli/data/weapons
 
 ```shell
 cd /home/zli/data/weapons
-/home/zli/workspace/github/darknetv4/darknet detector test cfg/knife_train.data cfg/knife_yolov3_test.cfg results/knife-yolov3_best.weights < knife_test_images.txt
+/home/zli/workspace/github/darknet/darknet detector test cfg/knife_train.data cfg/knife_yolov3_test.cfg results/knife-yolov3_best.weights < knife_test_images.txt
+```
+
+**Pseudo-labelling: use existing model to pre-label a list of images**
+
+```
+~/workspace/github/darknet/darknet detector test cfg/coco.data cfg/yolov3.cfg results/yolov3.weights -thresh 0.25 -dont_show -save_labels < images.txt
 ```
 
 ## Test a video and save results
 
 ```
 cd /home/zli/data/weapons
-/home/zli/workspace/github/darknetv4/darknet detector demo cfg/weapon_train.data cfg/weapon_yolov3.cfg results/weapon_yolov3_best.weights test.mp4 -out_filename result.mp4
+/home/zli/workspace/github/darknet/darknet detector demo cfg/weapon_train.data cfg/weapon_yolov3.cfg results/weapon_yolov3_best.weights test.mp4 -out_filename result.mp4
 ```
 
 ## Demo with a webcam
 
 ```shell
 cd /home/zli/data/weapons
-/home/zli/workspace/github/darknetv4/darknet detector demo cfg/knife_train.data cfg/knife_yolov3_test.cfg results/knife-yolov3_best.weights -c 0
+/home/zli/workspace/github/darknet/darknet detector demo cfg/knife_train.data cfg/knife_yolov3_test.cfg results/knife-yolov3_best.weights -c 0
 ```
 
 ## Calculate mAP
 
 ```shell
 cd /home/zli/data/weapons
-/home/zli/workspace/github/darknetv4/darknet detector map cfg/weapon_train.data cfg/weapon_yolov3_test.cfg results/weapon_yolov3_best.weights
+/home/zli/workspace/github/darknet/darknet detector map cfg/weapon_train.data cfg/weapon_yolov3_test.cfg results/weapon_yolov3_best.weights
 ```
 
 ## Transfer learning
@@ -53,7 +61,7 @@ cd /home/zli/data/weapons
 ```stopbackward=1``` will disable all layers below. For example, one can put that line before the first `Yolo` layer for fine-tuning a small dataset, and run 
 
 ```
-~/workspace/github/darknetv4/darknet detector train cfg/small_weapon_train.data cfg/small_weapon_yolov3.cfg results/weapon_yolov3_last.weights -map
+~/workspace/github/darknet/darknet detector train cfg/small_weapon_train.data cfg/small_weapon_yolov3.cfg results/weapon_yolov3_last.weights -map
 ```
 
 

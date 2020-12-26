@@ -7,9 +7,9 @@ import coco_fileutils
 from coco_fileutils import get_file_list
 from coco_fileutils import user_path
 
-
-def keep_only_labels(label_dir, label):
-    files = get_file_list(label_dir, True)
+# Keep only a label when the Id is equal to the input one
+def keep_only_labels(label_dir, label_id):
+    files = get_file_list(label_dir, True, '.txt')
 
     for filepath in files:
         lines = []
@@ -19,7 +19,7 @@ def keep_only_labels(label_dir, label):
         newlines = []
         for line in lines:
             words = line.split()
-            if len(words) > 0 and words[0].strip() == label:
+            if len(words) > 0 and words[0].strip() == label_id:
                 newlines.append(line)
 
         if len(newlines) < len(lines):
@@ -138,6 +138,7 @@ def copy_labels(image_dir, label_dir):
 
 
 if __name__ == "__main__":
+    keep_only_labels('/home/zli/Data/Person/cctv1', '0')
     # filenames = randomly_select_images(user_path('Data/Coco/images/train'), 10000)
     # coco_fileutils.copy_files(filenames, '/home/zli/Data/Coco/images/3/')
     # filenames = randomly_select_labelless_images(
